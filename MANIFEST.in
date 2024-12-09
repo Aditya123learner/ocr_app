@@ -1,0 +1,14 @@
+include README.md
+include LICENSE
+include requirements.txt
+include setup.py
+include pyproject.toml
+recursive-include ocr_app *.py
+recursive-include ocr_app *.txt
+recursive-include ocr_app *.js
+recursive-include ocr_app *.css
+recursive-include ocr_app *.html
+recursive-include ocr_app *.json
+recursive-include ocr_app *.md
+recursive-include ocr_app/public *
+recursive-include ocr_app/templates *
