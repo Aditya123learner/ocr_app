@@ -5,7 +5,7 @@ app_description = "auto data populate"
 app_email = "sanketshelar2002@gmail.com"
 app_license = "MIT"
 doctype_js = {
-    "Purchase Receipt": "public/js/purchase_receipt.js"
+    "Purchase Receipt": "public/js/Purchase_receipt.js"
 }
 
 # Includes in <head>

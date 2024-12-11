@@ -13,45 +13,54 @@ def extract_item_level_data(docname, item_idx):
         if not item:
             return {"success": False, "error": "Item not found."}
 
+         # Log the row being processed
+        frappe.logger().info(f"Processing row: {item_idx} with image: {item.custom_attach_image}")
+
+   
         # Get the file URL for the image
-        file_url = item.custom_sticker_copy
+        file_url = item.custom_attach_image
         if not file_url:
             return {"success": False, "error": "Please upload an image before extracting data."}
 
         # Get the file path
         file_path = get_file_path(file_url)
         
-        # Extract text using …
-frappe.ui.form.on('Purchase Receipt Item', {
-    custom_extract_text_from_sticker: function(frm, cdt, cdn) {
-        const row = locals[cdt][cdn];
+        # Extract text using pytesseract
+        extracted_text = pytesseract.image_to_string(file_path)
+        raw_text = extracted_text
+
+        # Extract Lot No. (either 4-digit or 6-digit)
+        lot_no_match = re.search(r"Lot\s*No\.?\s*:\s*(\d{4,6})", extracted_text, re.IGNORECASE)
+        lot_no = lot_no_match.group(1) if lot_no_match else None
+
+        # Extract Reel No. (including spaces within numbers)
+        reel_no_match = re.search(r"Reel\s*No\.?\s*:\s*([\d\s]+)", extracted_text, re.IGNORECASE)
+        reel_no = reel_no_match.group(1).replace(" ", "") if reel_no_match else None
         
-        if (!row.custom_sticker_copy) {
-            frappe.msgprint(__('Please upload an image before extracting data.'));
-            return;
+
+        # Extract Weight (Wt in Kgs)
+        all_numbers = re.findall(r'\d+', extracted_text)  # Extract all numbers from the text
+        if len(all_numbers) > 1:
+            weight = all_numbers[-1]  # Last number as Weight
+
+    
+
+        # Update the item fields
+        item.custom_lot_no = lot_no
+        item.custom_reel_no = reel_no
+        item.qty = weight
+        
+          # Ensure Accepted + Rejected Qty matches Received Qty
+        item.received_qty = weight  # Assume full acceptance, adjust as needed
+        item.rejected_qty = 0  # No rejection, adjust as needed
+        doc.save()
+        
+        return {
+            "success": True,
+            "lot_no": lot_no,
+            "reel_no": reel_no,
+            "qty": weight,
+            "raw_text": raw_text,
         }
-
-        frappe.call({
-            method: 'custom_ocr_app.api.extract_item_level_data',
-            args: {
-                docname: frm.doc.name,
-                item_idx: row.idx
-            },
-            callback: function(r) {
-                if (r.message.success) {
-                    frappe.msgprint(__('Data extracted successfully!'));
-                    frappe.model.set_value(cdt, cdn, 'custom_lot_no', r.message.lot_no);
-                    frappe.model.set_value(cdt, cdn, 'custom_reel_size', r.message.reel_no);
-                    frappe.model.set_value(cdt, cdn, 'qty', r.message.qty);
-
-
-                    // Ensure UI reflects changes in dependent fields
-                    frappe.model.set_value(cdt, cdn, 'accepted_qty', r.message.qty);
-                    frappe.model.set_value(cdt, cdn, 'rejected_qty', 0);
-                } else {
-                    frappe.msgprint(__('Error: ' + r.message.error));
-                }
-            }
-        });
-    }
-});
+    except Exception as e:
+        return {"success": False, "error": str(e)}
