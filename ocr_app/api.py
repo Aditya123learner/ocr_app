@@ -8,7 +8,8 @@ def extract_item_level_data(docname, item_idx):
     try:
         # Fetch the Purchase Receipt document
         doc = frappe.get_doc("Purchase Receipt", docname)
-        item = next((i for i in doc.items if i.idx == int(item_idx)), None)
+        item_idx=int(item_idx)
+        item = next((i for i in doc.items if i.idx == item_idx), None)
         
         if not item:
             return {"success": False, "error": "Item not found."}
@@ -43,7 +44,8 @@ def extract_item_level_data(docname, item_idx):
         if len(all_numbers) > 1:
             weight = all_numbers[-1]  # Last number as Weight
 
-    
+        doc = frappe.get_doc("Purchase Receipt", docname)
+        item = next((i for i in doc.items if i.idx == item_idx), None)
 
         # Update the item fields
         item.custom_lot_no = lot_no
@@ -53,7 +55,7 @@ def extract_item_level_data(docname, item_idx):
           # Ensure Accepted + Rejected Qty matches Received Qty
         item.received_qty = weight  # Assume full acceptance, adjust as needed
         item.rejected_qty = 0  # No rejection, adjust as needed
-        doc.save()
+        doc.save(ignore_version=True)
         
         return {
             "success": True,
