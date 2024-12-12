@@ -10,8 +10,7 @@ setup(
     include_package_data=True,  # Include non-Python files (e.g., images, templates, static)
     zip_safe=False,            # Set to False if your app is not safe to be zipped
     install_requires=[         # List of dependencies
-        'frappe',               # Frappe is mandatory
-        'pytesseract',          # If using Tesseract OCR, for example
+      'pytesseract',          # If using Tesseract OCR, for example
         'requests',             # Example of another common dependency
         'Pillow',
         'opencv-python-headless',
