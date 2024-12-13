@@ -3,7 +3,7 @@ with open("requirements.txt") as f:
 	install_requires = f.read().strip().split("\n")
 
 # get version from _version_ variable in lms/_init_.py
-from lms import _version_ as version
+from ocr_app import _version_ as version
 
 setup(
     name='ocr_app',  # Name of the app
