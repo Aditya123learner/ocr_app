@@ -8,7 +8,7 @@ requires-python = ">=3.10"
 readme = "README.md"
 version="1.0.2"
 dependencies = [
-    "frappe>=14.0.0,<15.0.0",
+    
     "pytesseract>=0.3.10",
     "Pillow>=9.0.1",
     "opencv-python-headless>=4.5.5"
