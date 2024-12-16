@@ -15,12 +15,12 @@ setup(
     packages=find_packages(),  # Automatically find all packages in your app
     include_package_data=True,  # Include non-Python files (e.g., images, templates, static)
     zip_safe=False,            # Set to False if your app is not safe to be zipped
-    install_requires=install_requires,
-    # [  
-    #     'frappe'       # List of dependencies
-    #   'pytesseract',          # If using Tesseract OCR, for example
-    #     'requests',             # Example of another common dependency
-    #     'Pillow',
-    #     'opencv-python-headless',
-    # ],
+    install_requires=
+    [  
+        'frappe'       # List of dependencies
+      'pytesseract',          # If using Tesseract OCR, for example
+        'requests',             # Example of another common dependency
+        'Pillow',
+        'opencv-python-headless',
+    ],
 )
