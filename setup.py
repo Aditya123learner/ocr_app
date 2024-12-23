@@ -1,13 +1,12 @@
 from setuptools import setup, find_packages
-with open("requirements.txt") as f:
-	install_requires = f.read().strip().split("\n")
+
 
 # # get version from _version_ variable in lms/_init_.py
 # from ocr_app.ocr_app import _version_ as version
 
 setup(
     name='ocr_app',  # Name of the app
-    version="1.0.2",        # Your app version
+    version="0.0.1",        # Your app version
     description='OCR App for Frappe',  # A short description
     url="https://github.com/Aditya123learner/ocr_app",
     author='lmc',     # Replace with your name
